@@ -70,7 +70,7 @@ class AchievementSeeder extends Seeder
         ];
 
         foreach ($achievements as $achievement){
-            $achievement = Achievement::create($achievement);
+            Achievement::create($achievement);
         }
     }
 }
