@@ -14,6 +14,8 @@ class BadgeSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('badges')->truncate();
+
         $badges = [
             [
                 'name' => 'beginner',

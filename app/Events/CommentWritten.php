@@ -5,6 +5,7 @@ namespace App\Events;
 use App\Models\Comment;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
+use Log;
 
 class CommentWritten
 {
@@ -20,5 +21,6 @@ class CommentWritten
     public function __construct(Comment $comment)
     {
         $this->comment = $comment;
+        Log::info($comment);
     }
 }
