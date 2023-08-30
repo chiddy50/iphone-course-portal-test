@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\CommentWritten;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Log;
 
 class UnlockCommentAchievements
 {
@@ -21,6 +22,6 @@ class UnlockCommentAchievements
      */
     public function handle(CommentWritten $event): void
     {
-        //
+        Log::info('Listener called');
     }
 }

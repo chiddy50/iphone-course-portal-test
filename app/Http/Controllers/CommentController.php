@@ -8,19 +8,18 @@ use App\Events\CommentWritten;
 
 class CommentController extends Controller
 {
-    public function create(Request $request)
+    public function store(Request $request)
     {
         // Validate input
         $request->validate([
-            'lesson_id' => 'required|exists:lessons,id',
+            // 'lesson_id' => 'required|exists:lessons,id',
             'content' => 'required|string',
         ]);
 
         // Create the comment
         $comment = Comment::create([
             'user_id' => auth()->id(),
-            'lesson_id' => $request->input('lesson_id'),
-            'content' => $request->input('content'),
+            'body' => $request->input('content'),
         ]);
 
         // Trigger the CommentWritten event

@@ -3,8 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Lesson;
+use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\BadgeSeeder;
+use Database\Seeders\AchievementSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,5 +19,14 @@ class DatabaseSeeder extends Seeder
         $lessons = Lesson::factory()
             ->count(20)
             ->create();
+
+        $users = User::factory()
+            ->count(5)
+            ->create();
+
+            $this->call([
+                AchievementSeeder::class,
+                BadgeSeeder::class,
+            ]);
     }
 }
