@@ -11,4 +11,10 @@ class Achievement extends Model
 
     protected $fillable = ['name', 'group', 'required_count'];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_achievements', 'achievement_id', 'user_id');
+    }
+
+
 }

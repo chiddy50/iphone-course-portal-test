@@ -43,12 +43,12 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function achievements(): HasMany
+    public function achievements()
     {
-        return $this->hasMany(Achievement::class);
+        return $this->belongsToMany(Achievement::class, 'user_achievements', 'user_id', 'achievement_id');
     }
 
-    public function comments(): HasMany
+    public function comments()
     {
         return $this->hasMany(Comment::class);
     }
@@ -56,6 +56,11 @@ class User extends Authenticatable
     public function watched()
     {
         return $this->belongsToMany(Lesson::class, 'user_lessons', 'user_id', 'lesson_id');
+    }
+
+    public function hasUnlockedAchievement($achievementName): bool
+    {
+        return $this->achievements()->where('name', $achievementName)->exists();
     }
 
     public function getNextAvailableAchievements()
