@@ -49,6 +49,16 @@ class User extends Authenticatable
         return $this->hasMany(Achievement::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function watched()
+    {
+        return $this->belongsToMany(Lesson::class, 'user_lessons', 'user_id', 'lesson_id');
+    }
+
     public function getNextAvailableAchievements()
     {
         // Get the names of unlocked achievements

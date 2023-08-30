@@ -17,4 +17,9 @@ class Lesson extends Model
     protected $fillable = [
         'title'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_lessons', 'lesson_id', 'user_id');
+    }
 }

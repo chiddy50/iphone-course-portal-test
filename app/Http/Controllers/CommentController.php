@@ -25,6 +25,10 @@ class CommentController extends Controller
         // Trigger the CommentWritten event
         event(new CommentWritten($comment));
 
+
+        // event(new BadgeUnlocked($comment));
+
+
         return response()->json(['message' => 'Comment created successfully']);
     }
 }
