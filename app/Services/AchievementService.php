@@ -13,36 +13,35 @@ class AchievementService implements AchievementServiceInterface
 {
     public function unlockAchievements(User $user)
     {
-        $unlockedAchievements = collect();
+        $unlocked_achievements = collect();
 
         // Get the user's current comment count
-        $commentCount = $user->comments()->count();
+        $comment_count = $user->comments()->count();
 
         // Get comment achievements criteria from the database
-        $commentAchievementsCriteria = Achievement::where('group', 'comment')->pluck('required_count', 'name');
+        $comment_achievements_criteria = Achievement::where('group', 'comment')->pluck('required_count', 'name');
 
-        foreach ($commentAchievementsCriteria as $achievementName => $requiredCount) {
-            if ($commentCount >= $requiredCount) {
+        foreach ($comment_achievements_criteria as $achievement_name => $required_count) {
+            if ($comment_count >= $required_count) {
 
                 // Check if the achievement is already unlocked
-                if (!$user->hasUnlockedAchievement($achievementName)) {
-                    event(new AchievementUnlocked($achievementName, $user));
+                if (!$user->hasUnlockedAchievement($achievement_name)) {
+                    event(new AchievementUnlocked($achievement_name, $user));
                 }
-                $unlockedAchievements->push($achievementName);
+                $unlocked_achievements->push($achievement_name);
             }
         }
 
-        return $unlockedAchievements;
+        return $unlocked_achievements;
     }
 
     public function getNextBadgeLevel(User $user)
     {
-        $achievementsCount = $user->achievements()->count() ?? 0;
+        $achievements_count = $user->achievements()->count() ?? 0;
 
-        $nextBadge = Badge::where('required_achievements', '<=', $achievementsCount)
+        $next_badge = Badge::where('required_achievements', '<=', $achievements_count)
                   ->orderBy('required_achievements', 'desc')
                   ->first();
-
-        return $nextBadge ?? null;
+        return $next_badge ?? null;
     }
 }

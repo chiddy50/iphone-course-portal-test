@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Achievement::class, 'user_achievements', 'user_id', 'achievement_id');
     }
 
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges', 'user_id', 'badge_id');
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
@@ -58,18 +63,23 @@ class User extends Authenticatable
         return $this->belongsToMany(Lesson::class, 'user_lessons', 'user_id', 'lesson_id');
     }
 
-    public function hasUnlockedAchievement($achievementName): bool
+    public function hasUnlockedAchievement($achievement_name): bool
     {
-        return $this->achievements()->where('name', $achievementName)->exists();
+        return $this->achievements()->where('name', $achievement_name)->exists();
+    }
+
+    public function hasBadge($badge_name): bool
+    {
+        return $this->badges()->where('name', $badge_name)->exists();
     }
 
     public function getNextAvailableAchievements()
     {
         // Get the names of unlocked achievements
-        $unlockedAchievements = $this->achievements->pluck('name')->toArray();
+        $unlocked_achievements = $this->achievements->pluck('name')->toArray();
 
         // Define the available achievements for lessons and comments
-        $lessonsAvailableAchievements = [
+        $lessons_available_achievements = [
             'First Lesson Watched',
             '5 Lessons Watched',
             '10 Lessons Watched',
@@ -77,7 +87,7 @@ class User extends Authenticatable
             '50 Lessons Watched',
         ];
 
-        $commentsAvailableAchievements = [
+        $comments_available_achievements = [
             'First Comment Written',
             '3 Comments Written',
             '5 Comments Written',
@@ -86,22 +96,22 @@ class User extends Authenticatable
         ];
 
         // Determine the next available achievements
-        $nextAvailableAchievements = [];
-        foreach ($lessonsAvailableAchievements as $achievement) {
-            if (!in_array($achievement, $unlockedAchievements)) {
-                $nextAvailableAchievements[] = $achievement;
+        $next_available_achievements = [];
+        foreach ($lessons_available_achievements as $achievement) {
+            if (!in_array($achievement, $unlocked_achievements)) {
+                $next_available_achievements[] = $achievement;
                 break; // Only show one next achievement per group
             }
         }
 
-        foreach ($commentsAvailableAchievements as $achievement) {
-            if (!in_array($achievement, $unlockedAchievements)) {
-                $nextAvailableAchievements[] = $achievement;
+        foreach ($comments_available_achievements as $achievement) {
+            if (!in_array($achievement, $unlocked_achievements)) {
+                $next_available_achievements[] = $achievement;
                 break; // Only show one next achievement per group
             }
         }
 
-        return $nextAvailableAchievements;
+        return $next_available_achievements;
     }
 
     public function currentBadge()
@@ -117,14 +127,14 @@ class User extends Authenticatable
 
         // return $nextBadge ? $nextBadge->name : null;
 
-        $badgeMapping = [
+        $badge_mapping = [
             'Beginner' => 0,
             'Intermediate' => 4,
             'Advanced' => 8,
             'Master' => 10,
         ];
 
-        foreach ($badgeMapping as $badgeName => $requiredAchievements) {
+        foreach ($badge_mapping as $badgeName => $requiredAchievements) {
             if ($this->achievements->count() < $requiredAchievements) {
                 return $badgeName;
             }
@@ -153,11 +163,11 @@ class User extends Authenticatable
             'Master' => 10,
         ];
 
-        $unlockedAchievements = $this->achievements->count();
+        $unlocked_achievements = $this->achievements->count();
 
         foreach ($badgeMapping as $requiredAchievements) {
-            if ($unlockedAchievements < $requiredAchievements) {
-                return $requiredAchievements - $unlockedAchievements;
+            if ($unlocked_achievements < $requiredAchievements) {
+                return $requiredAchievements - $unlocked_achievements;
             }
         }
 

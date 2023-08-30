@@ -8,9 +8,13 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 
 use App\Events\CommentWritten;
-use App\Listeners\CommentWrittenListener;
 use App\Events\AchievementUnlocked;
+use App\Events\BadgeUnlocked;
+
+use App\Listeners\CommentWrittenListener;
+use App\Listeners\BadgeUnlockedListener;
 use App\Listeners\AchievementUnlockedListener;
+
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -29,8 +33,9 @@ class EventServiceProvider extends ServiceProvider
         AchievementUnlocked::class => [
             AchievementUnlockedListener::class,
         ],
-
-
+        BadgeUnlocked::class => [
+            BadgeUnlockedListener::class,
+        ],
     ];
 
     /**

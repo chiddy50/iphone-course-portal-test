@@ -40,11 +40,17 @@ class AchievementUnlockedListener
 
 
         $nextBadge = $this->achievementService->getNextBadgeLevel($user);
+        Log::info(['nextBadge'=>$nextBadge->name ?? null]);
+
+
         if ($nextBadge) {
-            $badgeName = $badgeName->name;
-            event(new BadgeUnlocked($badgeName, $user));
+            $badgeName = $nextBadge->name;
+
+            if (!$user->hasBadge($badgeName)) {
+                event(new BadgeUnlocked($badgeName, $user));
+            }
+
         }
-        Log::info($nextBadge);
 
     }
 }

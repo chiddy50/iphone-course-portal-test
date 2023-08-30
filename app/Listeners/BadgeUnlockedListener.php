@@ -20,6 +20,7 @@ class BadgeUnlockedListener
      */
     public function handle(object $event): void
     {
-        //
+        Log::info('fired from badge event listener');
+        Log::info(['badge_name'=>$event->badge_name]);
     }
 }
