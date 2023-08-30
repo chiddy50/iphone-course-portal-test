@@ -38,7 +38,6 @@ class AchievementUnlockedListener
             'achievement_id' => $achievement->id
         ]);
 
-
         $nextBadge = $this->achievementService->getNextBadgeLevel($user);
         Log::info(['nextBadge'=>$nextBadge->name ?? null]);
 
