@@ -9,7 +9,7 @@ class Badge extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'required_achievements'];
+    protected $fillable = ['name', 'required_achievements', 'level'];
 
     public function users()
     {

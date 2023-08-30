@@ -20,7 +20,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'badge_id',
         'password',
     ];
 
@@ -102,9 +101,9 @@ class User extends Authenticatable
 
     public function currentBadge()
     {
-        if ($this->badge_id) {
-            return Badge::find($this->badge_id)->name;
-        }
+        // if ($this->badge_id) {
+        //     return Badge::find($this->badge_id)->name;
+        // }
 
         return null;
     }

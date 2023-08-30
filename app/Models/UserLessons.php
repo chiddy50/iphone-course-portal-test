@@ -9,7 +9,6 @@ class UserLessons extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_lessons';
     protected $fillable = ['user_id', 'lesson_id'];
 
     public function user()
