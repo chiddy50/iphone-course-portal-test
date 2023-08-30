@@ -8,7 +8,9 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 
 use App\Events\CommentWritten;
-use App\Listeners\UnlockCommentAchievements;
+use App\Listeners\CommentWrittenListener;
+use App\Events\AchievementUnlocked;
+use App\Listeners\AchievementUnlockedListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,8 +24,13 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         CommentWritten::class => [
-            UnlockCommentAchievements::class,
+            CommentWrittenListener::class,
         ],
+        AchievementUnlocked::class => [
+            AchievementUnlockedListener::class,
+        ],
+
+
     ];
 
     /**

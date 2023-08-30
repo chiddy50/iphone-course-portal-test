@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Services\AchievementService;
 use Log;
 
-class UnlockCommentAchievements
+class CommentWrittenListener
 {
     protected $achievementService;
 
@@ -28,7 +28,7 @@ class UnlockCommentAchievements
         $user = $event->comment->user;
 
         // Check if the user has unlocked any new achievements
-        $newAchievements = $this->achievementService->unlockCommentAchievements($user);
+        $newAchievements = $this->achievementService->unlockAchievements($user);
 
         Log::info($newAchievements);
     }

@@ -3,13 +3,15 @@
 namespace App\Services;
 
 use App\Interfaces\AchievementServiceInterface;
-use Log;
 use App\Models\User;
+use App\Models\Badge;
 use App\Models\Achievement;
+use App\Events\AchievementUnlocked;
+use Log;
 
 class AchievementService implements AchievementServiceInterface
 {
-    public function unlockCommentAchievements(User $user)
+    public function unlockAchievements(User $user)
     {
         $unlockedAchievements = collect();
 
@@ -19,30 +21,28 @@ class AchievementService implements AchievementServiceInterface
         // Get comment achievements criteria from the database
         $commentAchievementsCriteria = Achievement::where('group', 'comment')->pluck('required_count', 'name');
 
-        // Check if any new comment achievements are unlocked
         foreach ($commentAchievementsCriteria as $achievementName => $requiredCount) {
             if ($commentCount >= $requiredCount) {
 
                 // Check if the achievement is already unlocked
                 if (!$user->hasUnlockedAchievement($achievementName)) {
-                    // Unlock the achievement
-                    $achievement = Achievement::where('name', $achievementName)->first();
-                    UserAchievement::create([
-                        'user_id' => $user->id,
-                        'achievement_id' => $achievement->id,
-                    ]);
-
-                    // Fire the AchievementUnlocked event
                     event(new AchievementUnlocked($achievementName, $user));
-
-                    // Add the unlocked achievement to the collection
-                    $unlockedAchievements->push($achievementName);
                 }
+                $unlockedAchievements->push($achievementName);
             }
         }
-        return $commentAchievementsCriteria;
-
 
         return $unlockedAchievements;
+    }
+
+    public function getNextBadgeLevel(User $user)
+    {
+        $achievementsCount = $user->achievements()->count() ?? 0;
+
+        $nextBadge = Badge::where('required_achievements', '<=', $achievementsCount)
+                  ->orderBy('required_achievements', 'desc')
+                  ->first();
+
+        return $nextBadge ?? null;
     }
 }

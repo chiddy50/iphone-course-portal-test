@@ -106,11 +106,7 @@ class User extends Authenticatable
 
     public function currentBadge()
     {
-        // if ($this->badge_id) {
-        //     return Badge::find($this->badge_id)->name;
-        // }
-
-        return null;
+        return $this->badges()->orderByDesc('level')->first() ?? null;
     }
 
     public function getNextBadgeName()
