@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Badge;
-use Illuminate\Support\Facades\DB;
 
 class BadgeSeeder extends Seeder
 {
@@ -14,7 +13,7 @@ class BadgeSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('badges')->truncate();
+        Badge::truncate();
 
         $badges = [
             [
@@ -39,8 +38,6 @@ class BadgeSeeder extends Seeder
             ],
         ];
 
-        foreach ($badges as $badge){
-            Badge::create($badge);
-        }
+        Badge::insert($badges);
     }
 }

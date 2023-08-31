@@ -12,16 +12,16 @@ class AchievementService implements AchievementServiceInterface
 {
     public function getUnlockedAchievements(User $user)
     {
-        $unlockedAchievementIds = $user->achievements->pluck('id')->toArray();
+        $unlocked_achievement_ids = $user->achievements->pluck('id')->toArray();
 
-        return Achievement::whereNotIn('id', $unlockedAchievementIds)->pluck('name')->toArray();
+        return Achievement::whereNotIn('id', $unlocked_achievement_ids)->pluck('name')->toArray();
     }
 
     public function getNextAvailableAchievements(User $user)
     {
-        $unlockedAchievementIds = $user->achievements->pluck('id')->toArray();
+        $unlocked_achievement_ids = $user->achievements->pluck('id')->toArray();
 
-        $nextAvailableAchievements = Achievement::whereNotIn('id', $unlockedAchievementIds)
+        $next_available_achievements = Achievement::whereNotIn('id', $unlocked_achievement_ids)
                     ->get()->groupBy('group')
                     ->map(function ($achievements) {
                         $minAchievement = $achievements->min('required_count');
@@ -29,18 +29,17 @@ class AchievementService implements AchievementServiceInterface
                     })
                     ->flatten()
                     ->toArray();
-        return $nextAvailableAchievements;
+        return $next_available_achievements;
     }
 
     public function remainingAchievementsToUnlockNextBadge(User $user)
     {
-        $badgeMapping = Badge::getBadgeMapping();
-
+        $badge_mapping = Badge::getBadgeMapping();
         $unlocked_achievements = $user->achievements->count();
 
-        foreach ($badgeMapping as $requiredAchievements) {
-            if ($unlocked_achievements < $requiredAchievements) {
-                return $requiredAchievements - $unlocked_achievements;
+        foreach ($badge_mapping as $required_achievements) {
+            if ($unlocked_achievements < $required_achievements) {
+                return $required_achievements - $unlocked_achievements;
             }
         }
 

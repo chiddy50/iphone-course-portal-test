@@ -24,9 +24,9 @@ class DatabaseSeeder extends Seeder
             ->count(5)
             ->create();
 
-            $this->call([
-                AchievementSeeder::class,
-                BadgeSeeder::class,
-            ]);
+        $this->call([
+            AchievementSeeder::class,
+            BadgeSeeder::class,
+        ]);
     }
 }

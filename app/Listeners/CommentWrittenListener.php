@@ -6,8 +6,6 @@ use App\Events\CommentWritten;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Services\AchievementService;
-use Log;
-
 use App\Models\Achievement;
 use App\Events\AchievementUnlocked;
 

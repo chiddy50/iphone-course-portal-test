@@ -9,7 +9,6 @@ use App\Models\UserAchievement;
 use App\Models\User;
 use App\Models\Badge;
 use App\Events\BadgeUnlocked;
-use Log;
 
 class AchievementUnlockedListener
 {
@@ -29,7 +28,6 @@ class AchievementUnlockedListener
         $achievementName = $event->achievementName;
         $user = $event->user;
 
-        // Unlock the achievement
         $achievement = Achievement::where('name', $achievementName)->first();
 
         UserAchievement::create([
@@ -38,8 +36,6 @@ class AchievementUnlockedListener
         ]);
 
         $nextBadge = $this->getNextBadgeLevel($user);
-        Log::info(['nextBadge'=>$nextBadge->name ?? null]);
-
 
         if ($nextBadge) {
             $badgeName = $nextBadge->name;
@@ -47,7 +43,6 @@ class AchievementUnlockedListener
             if (!$user->hasBadge($badgeName)) {
                 event(new BadgeUnlocked($badgeName, $user));
             }
-
         }
 
     }

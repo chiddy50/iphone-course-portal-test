@@ -7,7 +7,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\UserLesson;
 use App\Models\Achievement;
 use App\Events\AchievementUnlocked;
-use Log;
 
 class LessonWatchedListener
 {

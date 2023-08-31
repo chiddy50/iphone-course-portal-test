@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Achievement;
-use Illuminate\Support\Facades\DB;
 
 class AchievementSeeder extends Seeder
 {
@@ -14,7 +13,7 @@ class AchievementSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('achievements')->truncate();
+        Achievement::truncate();
 
         $achievements = [
             [
@@ -69,8 +68,7 @@ class AchievementSeeder extends Seeder
             ]
         ];
 
-        foreach ($achievements as $achievement){
-            Achievement::create($achievement);
-        }
+        Achievement::insert($achievements);
+
     }
 }
