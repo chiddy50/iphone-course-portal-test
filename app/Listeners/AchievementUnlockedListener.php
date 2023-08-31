@@ -6,20 +6,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\Achievement;
 use App\Models\UserAchievement;
+use App\Models\User;
+use App\Models\Badge;
 use App\Events\BadgeUnlocked;
-use App\Services\AchievementService;
 use Log;
 
 class AchievementUnlockedListener
 {
-    protected $achievementService;
-
     /**
      * Create the event listener.
      */
-    public function __construct(AchievementService $achievementService)
+    public function __construct()
     {
-        $this->achievementService = $achievementService;
+
     }
 
     /**
@@ -38,7 +37,7 @@ class AchievementUnlockedListener
             'achievement_id' => $achievement->id
         ]);
 
-        $nextBadge = $this->achievementService->getNextBadgeLevel($user);
+        $nextBadge = $this->getNextBadgeLevel($user);
         Log::info(['nextBadge'=>$nextBadge->name ?? null]);
 
 
@@ -51,5 +50,15 @@ class AchievementUnlockedListener
 
         }
 
+    }
+
+    public function getNextBadgeLevel(User $user)
+    {
+        $achievements_count = $user->achievements()->count() ?? 0;
+
+        $next_badge = Badge::where('required_achievements', '<=', $achievements_count)
+                  ->orderBy('required_achievements', 'desc')
+                  ->first();
+        return $next_badge ?? null;
     }
 }

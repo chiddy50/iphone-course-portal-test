@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserLessons extends Model
+class UserLesson extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'lesson_id', 'watch_count', 'watched'];
+    protected $fillable = ['user_id', 'lesson_id'];
 
     public function user()
     {

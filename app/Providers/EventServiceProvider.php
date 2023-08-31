@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Event;
 use App\Events\CommentWritten;
 use App\Events\AchievementUnlocked;
 use App\Events\BadgeUnlocked;
+use App\Events\LessonWatched;
 
 use App\Listeners\CommentWrittenListener;
 use App\Listeners\BadgeUnlockedListener;
 use App\Listeners\AchievementUnlockedListener;
+use App\Listeners\LessonWatchedListener;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -36,6 +38,9 @@ class EventServiceProvider extends ServiceProvider
         BadgeUnlocked::class => [
             BadgeUnlockedListener::class,
         ],
+        LessonWatched::class => [
+            LessonWatchedListener::class,
+        ]
     ];
 
     /**

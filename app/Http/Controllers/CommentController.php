@@ -14,9 +14,11 @@ class CommentController extends Controller
     {
         // Validate input
         $request->validate([
-            'lesson_id' => 'required|string',
+            'lesson_id' => 'required',
             // 'content' => 'required|string',
         ]);
+
+        $user = auth()->user();
 
         // // Create the comment
         // $comment = Comment::create([
@@ -24,10 +26,9 @@ class CommentController extends Controller
         //     'body' => $request->input('content'),
         // ]);
 
-        $lesson = Lesson::find($request->input('lesson_id'));
+        $lesson = Lesson::find($request->lesson_id);
 
-        event(new LessonWatched($lesson));
-
+        event(new LessonWatched($lesson, $user));
 
         return response()->json(['message' => 'Comment created successfully']);
     }

@@ -8,16 +8,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Services\AchievementService;
 use Log;
 
+use App\Models\Achievement;
+use App\Events\AchievementUnlocked;
+
+
 class CommentWrittenListener
 {
-    protected $achievementService;
 
     /**
      * Create the event listener.
      */
-    public function __construct(AchievementService $achievementService)
+    public function __construct()
     {
-        $this->achievementService = $achievementService;
+
     }
 
     /**
@@ -27,9 +30,18 @@ class CommentWrittenListener
     {
         $user = $event->comment->user;
 
-        // Check if the user has unlocked any new achievements
-        $newAchievements = $this->achievementService->unlockAchievements($user);
+        $comment_count = $user->comments()->count();
 
-        Log::info($newAchievements);
+        $comment_achievements_criteria = Achievement::where('group', 'comment')->pluck('required_count', 'name');
+
+        foreach ($comment_achievements_criteria as $achievement_name => $required_count) {
+            if ($comment_count >= $required_count) {
+
+                // Check if the achievement is already unlocked
+                if (!$user->hasUnlockedAchievement($achievement_name)) {
+                    event(new AchievementUnlocked($achievement_name, $user));
+                }
+            }
+        }
     }
 }

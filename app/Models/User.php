@@ -73,6 +73,11 @@ class User extends Authenticatable
         return $this->badges()->where('name', $badge_name)->exists();
     }
 
+    public function hasWatched($lesson_name): bool
+    {
+        return $this->watched()->where('title', $lesson_name)->exists();
+    }
+
     public function getNextAvailableAchievements()
     {
         // Get the names of unlocked achievements
@@ -121,26 +126,37 @@ class User extends Authenticatable
 
     public function getNextBadgeName()
     {
+        $achievements_count = $this->achievements()->count() ?? 0;
+
+        $next_badge = Badge::where('required_achievements', '<=', $achievements_count)
+                  ->orderBy('required_achievements', 'desc')
+                  ->first();
+        return $next_badge ?? null;
+
+
         // $nextBadge = Badge::where('required_achievements', '>', $this->achievements()->count())
         // ->orderBy('required_achievements')
         // ->first();
 
         // return $nextBadge ? $nextBadge->name : null;
 
-        $badge_mapping = [
-            'Beginner' => 0,
-            'Intermediate' => 4,
-            'Advanced' => 8,
-            'Master' => 10,
-        ];
 
-        foreach ($badge_mapping as $badgeName => $requiredAchievements) {
-            if ($this->achievements->count() < $requiredAchievements) {
-                return $badgeName;
-            }
-        }
 
-        return 'Master'; // If all achievements are unlocked, user is a Master
+
+        // $badge_mapping = [
+        //     'Beginner' => 0,
+        //     'Intermediate' => 4,
+        //     'Advanced' => 8,
+        //     'Master' => 10,
+        // ];
+
+        // foreach ($badge_mapping as $badgeName => $requiredAchievements) {
+        //     if ($this->achievements->count() < $requiredAchievements) {
+        //         return $badgeName;
+        //     }
+        // }
+
+        // return 'Master'; // If all achievements are unlocked, user is a Master
     }
 
     public function remainingAchievementsToUnlockNextBadge()
