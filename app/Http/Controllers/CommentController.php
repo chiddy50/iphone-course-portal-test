@@ -12,11 +12,6 @@ class CommentController extends Controller
 {
     public function store(Request $request)
     {
-        // Validate input
-        $request->validate([
-            'lesson_id' => 'required',
-            // 'content' => 'required|string',
-        ]);
 
         $user = auth()->user();
 
@@ -26,9 +21,12 @@ class CommentController extends Controller
         //     'body' => $request->input('content'),
         // ]);
 
-        $lesson = Lesson::find($request->lesson_id);
+        for ($i = 11; $i <= 101; $i++) {
+            $lesson = Lesson::find($i);
+            event(new LessonWatched($lesson, $user));
+        }
 
-        event(new LessonWatched($lesson, $user));
+        // event(new CommentWritten($comment, $user));
 
         return response()->json(['message' => 'Comment created successfully']);
     }

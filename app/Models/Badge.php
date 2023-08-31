@@ -15,4 +15,9 @@ class Badge extends Model
     {
         return $this->belongsToMany(User::class, 'user_badges', 'badge_id', 'user_id');
     }
+
+    public static function getBadgeMapping()
+    {
+        return self::pluck('required_achievements', 'name')->toArray();
+    }
 }
